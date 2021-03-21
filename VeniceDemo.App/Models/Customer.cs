@@ -18,7 +18,7 @@ namespace VeniceDemo.App.Models
 		public string FirstName { get; set; }
 		public string SecondName { get; set; }
 		public string Login { get; set; }
-		public long Password { get; set; }
+		public string Password { get; set; }
 
 		public virtual ICollection<Order> Orders { get; set; }
 		public virtual ICollection<Payment> Payments { get; set; }

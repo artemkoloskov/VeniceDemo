@@ -34,7 +34,7 @@ namespace VeniceDemo.App.Data
 		{
 			if (!optionsBuilder.IsConfigured)
 			{
-				optionsBuilder.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+				optionsBuilder.UseSqlite(Configuration.GetConnectionString("VeniceDbConnection"));
 			}
 		}
 

@@ -21,8 +21,8 @@ namespace VeniceDemo.App.Models
 
 		private string dateCreated;
 
-		public virtual double TotalCost 
-		{ 
+		public virtual double TotalCost
+		{
 			get
 			{
 				double computedTotalcost = 0;

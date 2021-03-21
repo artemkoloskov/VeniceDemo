@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VeniceDemo.App.Data;
+using VeniceDemo.App.Models;
 
 namespace VeniceDemo.App
 {
@@ -32,6 +34,12 @@ namespace VeniceDemo.App
 					Configuration.GetConnectionString("VeniceDbConnection")));
 
 			services.AddDatabaseDeveloperPageExceptionFilter();
+
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+				.AddCookie(options =>
+				{
+					options.LoginPath = "/Account/Login";
+				});
 
 			services.AddControllersWithViews();
 		}
@@ -54,6 +62,9 @@ namespace VeniceDemo.App
 			app.UseStaticFiles();
 
 			app.UseRouting();
+
+			app.UseAuthentication();
+			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
 			{
