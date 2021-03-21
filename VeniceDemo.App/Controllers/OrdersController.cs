@@ -23,7 +23,7 @@ namespace VeniceDemo.App.Controllers
 		// GET: Orders
 		public async Task<IActionResult> Index()
 		{
-			var veniceDBContext = _context.Orders
+			Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<Order, Pizza> veniceDBContext = _context.Orders
 				.Include(o => o.Customer)
 				.Include(o => o.OrderPizzas)
 					.ThenInclude(op => op.Pizza);
@@ -39,7 +39,7 @@ namespace VeniceDemo.App.Controllers
 				return NotFound();
 			}
 
-			var order = await _context.Orders
+			Order order = await _context.Orders
 				.Include(o => o.Customer)
 				.FirstOrDefaultAsync(m => m.Id == id);
 
@@ -88,7 +88,7 @@ namespace VeniceDemo.App.Controllers
 				return NotFound();
 			}
 
-			var order = await _context.Orders
+			Order order = await _context.Orders
 				.Include(o => o.Customer)
 				.Include(o => o.OrderPizzas)
 					.ThenInclude(op => op.Pizza)
@@ -150,7 +150,7 @@ namespace VeniceDemo.App.Controllers
 				return NotFound();
 			}
 
-			var order = await _context.Orders
+			Order order = await _context.Orders
 				.Include(o => o.Customer)
 				.FirstOrDefaultAsync(m => m.Id == id);
 
@@ -167,7 +167,7 @@ namespace VeniceDemo.App.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmed(long id)
 		{
-			var order = await _context.Orders.FindAsync(id);
+			Order order = await _context.Orders.FindAsync(id);
 
 			_context.Orders.Remove(order);
 

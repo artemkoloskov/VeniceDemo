@@ -34,9 +34,9 @@ namespace VeniceDemo.App.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Login(LoginModel userToLogin)
 		{
-			var customers = await _context.Customers.ToListAsync();
+			List<Customer> customers = await _context.Customers.ToListAsync();
 
-			var user = customers.Find(c => c.Login == userToLogin.Login && c.Password == userToLogin.Password);
+			Customer user = customers.Find(c => c.Login == userToLogin.Login && c.Password == userToLogin.Password);
 
 			if (user is not null)
 			{
@@ -90,7 +90,7 @@ namespace VeniceDemo.App.Controllers
 
 		private async Task Authenticate(Customer user)
 		{
-			var claims = new List<Claim>
+			List<Claim> claims = new List<Claim>
 				{
 					new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
 					new Claim("Id", user.Id.ToString()),

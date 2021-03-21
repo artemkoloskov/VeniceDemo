@@ -27,7 +27,7 @@ namespace VeniceDemo.App.Models
 			{
 				double computedTotalcost = 0;
 
-				foreach (var pizza in OrderPizzas)
+				foreach (OrderPizza pizza in OrderPizzas)
 				{
 					computedTotalcost += pizza.Pizza.Price;
 				}

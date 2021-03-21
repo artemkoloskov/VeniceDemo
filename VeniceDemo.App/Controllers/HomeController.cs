@@ -26,9 +26,10 @@ namespace VeniceDemo.App.Controllers
 		[Authorize]
 		public IActionResult Index()
 		{
-			var customers = _context.Customers.ToList();
+			List<Customer> customers = _context.Customers.ToList();
 
-			Customer loggedInCustomer = customers.FirstOrDefault(c => c.Id.ToString() == User.Claims.Where(c => c.Type == "Id").FirstOrDefault().Value);
+			Customer loggedInCustomer = customers.FirstOrDefault(c => 
+				c.Id.ToString() == User.Claims.Where(c => c.Type == "Id").FirstOrDefault().Value);
 
 			ViewBag.UserName = loggedInCustomer.FullName;
 
