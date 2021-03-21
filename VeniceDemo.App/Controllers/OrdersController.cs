@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -29,12 +30,16 @@ namespace VeniceDemo.App.Controllers
 
 			var orders = await GetOrdersData();
 
-			await GetPaymentsData();
+			var payments = await GetPaymentsData();
+
+			ViewBag.CustomerPayments = payments;
+
+			ViewBag.WeeklyData = GetWeeklyData(orders, payments);
 
 			return View(orders);
 		}
 
-		private async Task GetPaymentsData()
+		private async Task<List<Payment>> GetPaymentsData()
 		{
 			await _context.Payments.LoadAsync();
 
@@ -43,9 +48,9 @@ namespace VeniceDemo.App.Controllers
 
 			var payments = await customerPayments.ToListAsync();
 
-			ViewBag.TotalAmountPaid = GetTotalAmountPaid(payments);
+			ViewBag.TotalAmountPaid = Payment.GetTotalAmountPaid(payments);
 
-			ViewBag.CustomerPayments = payments;
+			return payments;
 		}
 
 		private async Task<List<Order>> GetOrdersData()
@@ -57,33 +62,51 @@ namespace VeniceDemo.App.Controllers
 
 			var orders = await customerOrders.ToListAsync();
 
-			ViewBag.TotalOrdersCost = GetTotalOrdersCost(orders);
+			ViewBag.TotalOrdersCost = Order.GetTotalOrdersCost(orders);
 
 			return orders;
 		}
 
-		private double GetTotalOrdersCost(List<Order> orders)
+		private Dictionary<string, (double ordered, double paid, double delta)> GetWeeklyData(List<Order> orders, List<Payment> payments)
 		{
-			double totalCost = 0;
+			Dictionary<string, (double ordered, double paid, double delta)> weeklyData = new();
 
-			foreach (Order order in orders)
+			var weeklyOrders = Order.GetWeeklyOrdersData(orders);
+
+			var weeklyPayments = Payment.GetWeeklyPaymentsData(payments);
+
+			List<string> allWeekKeys = GetAllWeekKeys(new List<string>(weeklyOrders.Keys), new List<string>(weeklyPayments.Keys));
+
+			foreach (string weekKey in allWeekKeys)
 			{
-				totalCost += order.TotalCost;
+				double ordered = weeklyOrders.ContainsKey(weekKey) ? weeklyOrders[weekKey] : 0;
+
+				double paid = weeklyPayments.ContainsKey(weekKey) ? weeklyPayments[weekKey] : 0;
+
+				double delta = ordered - paid;
+
+				weeklyData.Add(weekKey, (ordered, paid, delta));
 			}
 
-			return totalCost;
+			return weeklyData;
 		}
 
-		private double GetTotalAmountPaid(List<Payment> payments)
+		private static List<string> GetAllWeekKeys(List<string> list1, List<string> list2)
 		{
-			double totalAmount = 0;
+			List<string> allWeeklyKeys = new();
 
-			foreach (Payment payment in payments)
+			foreach (List<string> list in new[] { list1, list2 })
 			{
-				totalAmount += payment.Amount;
+				foreach (string key in list)
+				{
+					if (!allWeeklyKeys.Contains(key))
+					{
+						allWeeklyKeys.Add(key);
+					}
+				}
 			}
 
-			return totalAmount;
+			return allWeeklyKeys;
 		}
 
 		// GET: Orders/Details/5

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1 class="display-4">Ваши заказы</h1>
+<h1 class="display-6">Ваши заказы</h1>
 
 <p>
     <a asp-action="Create">Создать новый заказ</a>
@@ -36,7 +36,7 @@
                     @Html.DisplayFor(modelItem => item.DateCreated)
                 </td>
                 <td>
-                    @item.TotalCost
+                    @item.TotalCost руб.
                 </td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id">Детали заказа</a>
@@ -48,19 +48,17 @@
                 Всего заказов на сумму
             </td>
             <td>
-                
             </td>
             <td>
-                @ViewBag.TotalOrdersCost
+                @ViewBag.TotalOrdersCost руб.
             </td>
             <td>
-                
             </td>
         </tr>
     </tbody>
 </table>
 
-<h1 class="display-4">Ваши платежи</h1>
+<h1 class="display-6">Ваши платежи</h1>
 
 <p>
     <a asp-action="Create">Создать новый платеж</a>
@@ -91,10 +89,10 @@
                     @payment.DateCreated
                 </td>
                 <td>
-                    @payment.Amount
+                    @payment.Amount руб.
                 </td>
                 <td>
-                    <a asp-controller="Payments" asp-action="Details" asp-route-id="@payment.Id">Детали заказа</a>
+                    <a asp-controller="Payments" asp-action="Details" asp-route-id="@payment.Id">Детали платежа</a>
                 </td>
             </tr>
         }
@@ -103,14 +101,73 @@
                 Всего оплачено
             </td>
             <td>
-                
             </td>
             <td>
-                @ViewBag.TotalAmountPaid
+                @ViewBag.TotalAmountPaid руб.
             </td>
             <td>
-                
+                @if ((double)ViewBag.TotalOrdersCost - (double)ViewBag.TotalAmountPaid > 0)
+                {
+                    <p>Долг: @((double)ViewBag.TotalOrdersCost - (double)ViewBag.TotalAmountPaid) руб.</p>
+                }
             </td>
         </tr>
     </tbody>
 </table>
+
+<h1 class="display-6">Свод по неделям</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Номер недели
+            </th>
+            <th>
+                Заказов на сумму
+            </th>
+            <th>
+                Оплачено, сумма
+            </th>
+            <th>
+                Долг на конец недели
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var week in ((Dictionary<string, (double ordered, double paid, double delta)>)ViewBag.WeeklyData))
+        {
+            <tr>
+                <td>
+                    @week.Key
+                </td>
+                <td>
+                    @week.Value.ordered руб.
+                </td>
+                <td>
+                    @week.Value.paid руб.
+                </td>
+                <td>
+                    @week.Value.delta руб.
+                </td>
+            </tr>
+        }
+        <tr>
+            <td>
+                Итого
+            </td>
+            <td>
+                @ViewBag.TotalOrdersCost руб.
+            </td>
+            <td>
+                @ViewBag.TotalAmountPaid руб.
+            </td>
+            <td>
+                @if ((double)ViewBag.TotalOrdersCost - (double)ViewBag.TotalAmountPaid > 0)
+                {
+                    <p>Долг: @((double)ViewBag.TotalOrdersCost - (double)ViewBag.TotalAmountPaid) руб.</p>
+                }
+            </td>
+        </tr>
+    </tbody>
+</table>
+
