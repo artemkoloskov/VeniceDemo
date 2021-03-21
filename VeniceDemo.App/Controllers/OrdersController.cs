@@ -21,9 +21,13 @@ namespace VeniceDemo.App.Controllers
 		}
 
 		// GET: Orders
+		[Authorize]
 		public async Task<IActionResult> Index()
 		{
+			string customerId = User.Claims.Where(c => c.Type == "Id").FirstOrDefault().Value;
+
 			Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<Order, Pizza> veniceDBContext = _context.Orders
+				.Where(o => o.CustomerId + "" == customerId)
 				.Include(o => o.Customer)
 				.Include(o => o.OrderPizzas)
 					.ThenInclude(op => op.Pizza);
