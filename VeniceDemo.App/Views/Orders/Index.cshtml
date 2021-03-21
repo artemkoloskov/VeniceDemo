@@ -9,6 +9,7 @@
 <p>
     <a asp-action="Create">Создать новый заказ</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -25,21 +26,91 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    @item.TotalCost
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Детали заказа</a>
+                </td>
+            </tr>
+        }
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
+                Всего заказов на сумму
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
+                
             </td>
             <td>
-                @item.TotalCost
+                @ViewBag.TotalOrdersCost
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Детали заказа</a>
+                
             </td>
         </tr>
-}
+    </tbody>
+</table>
+
+<h1 class="display-4">Ваши платежи</h1>
+
+<p>
+    <a asp-action="Create">Создать новый платеж</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Номер платежа
+            </th>
+            <th>
+                Дата платежа
+            </th>
+            <th>
+                Сумма платежа
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var payment in (List<Payment>)ViewBag.CustomerPayments)
+        {
+            <tr>
+                <td>
+                    @payment.Id
+                </td>
+                <td>
+                    @payment.DateCreated
+                </td>
+                <td>
+                    @payment.Amount
+                </td>
+                <td>
+                    <a asp-controller="Payments" asp-action="Details" asp-route-id="@payment.Id">Детали заказа</a>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td>
+                Всего оплачено
+            </td>
+            <td>
+                
+            </td>
+            <td>
+                @ViewBag.TotalAmountPaid
+            </td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
 </table>

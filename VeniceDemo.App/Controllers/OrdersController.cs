@@ -14,6 +14,7 @@ namespace VeniceDemo.App.Controllers
 	public class OrdersController : Controller
 	{
 		private readonly VeniceDBContext _context;
+		private string _customerId;
 
 		public OrdersController(VeniceDBContext context)
 		{
@@ -24,15 +25,65 @@ namespace VeniceDemo.App.Controllers
 		[Authorize]
 		public async Task<IActionResult> Index()
 		{
-			string customerId = User.Claims.Where(c => c.Type == "Id").FirstOrDefault().Value;
+			_customerId = User.Claims.Where(c => c.Type == "Id").FirstOrDefault().Value;
 
-			Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<Order, Pizza> veniceDBContext = _context.Orders
-				.Where(o => o.CustomerId + "" == customerId)
-				.Include(o => o.Customer)
+			var orders = await GetOrdersData();
+
+			await GetPaymentsData();
+
+			return View(orders);
+		}
+
+		private async Task GetPaymentsData()
+		{
+			await _context.Payments.LoadAsync();
+
+			var customerPayments = _context.Payments
+				.Where(p => p.CustomerId + "" == _customerId);
+
+			var payments = await customerPayments.ToListAsync();
+
+			ViewBag.TotalAmountPaid = GetTotalAmountPaid(payments);
+
+			ViewBag.CustomerPayments = payments;
+		}
+
+		private async Task<List<Order>> GetOrdersData()
+		{
+			var customerOrders = _context.Orders
+				.Where(o => o.CustomerId + "" == _customerId)
 				.Include(o => o.OrderPizzas)
 					.ThenInclude(op => op.Pizza);
 
-			return View(await veniceDBContext.ToListAsync());
+			var orders = await customerOrders.ToListAsync();
+
+			ViewBag.TotalOrdersCost = GetTotalOrdersCost(orders);
+
+			return orders;
+		}
+
+		private double GetTotalOrdersCost(List<Order> orders)
+		{
+			double totalCost = 0;
+
+			foreach (Order order in orders)
+			{
+				totalCost += order.TotalCost;
+			}
+
+			return totalCost;
+		}
+
+		private double GetTotalAmountPaid(List<Payment> payments)
+		{
+			double totalAmount = 0;
+
+			foreach (Payment payment in payments)
+			{
+				totalAmount += payment.Amount;
+			}
+
+			return totalAmount;
 		}
 
 		// GET: Orders/Details/5

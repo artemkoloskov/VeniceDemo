@@ -1,10 +1,13 @@
 ﻿@if (User.Identity.IsAuthenticated)
 {
-    <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Выход</a>
-        </li>
-    </ul>
+<ul class="navbar-nav">
+    <li class="nav-item">
+        <p class="nav-link text-dark">Клиент - @User.Claims.Where(c => c.Type == "FullName").FirstOrDefault().Value</p>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Выход</a>
+    </li>
+</ul>
 }
 else
 {
