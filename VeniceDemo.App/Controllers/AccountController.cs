@@ -11,13 +11,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VeniceDemo.App.Data;
 using VeniceDemo.App.Models;
+using VeniceDemo.App.ViewModels;
+
 
 namespace VeniceDemo.App.Controllers
 {
 	public class AccountController : Controller
 	{
-
 		private readonly VeniceDBContext _context;
+
 		public AccountController(VeniceDBContext context)
 		{
 			_context = context;
@@ -30,13 +32,13 @@ namespace VeniceDemo.App.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> LoginCustomer(Customer customer)
+		public async Task<IActionResult> Login(LoginModel userToLogin)
 		{
 			var customers = await _context.Customers.ToListAsync();
 
-			var user = customers.Find(c => c.Login == customer.Login && c.Password == customer.Password);
+			var user = customers.Find(c => c.Login == userToLogin.Login && c.Password == userToLogin.Password);
 
-			if (!(user is null))
+			if (user is not null)
 			{
 				await Authenticate(user);
 
@@ -46,7 +48,47 @@ namespace VeniceDemo.App.Controllers
 			return Redirect("/Accout/Error");
 		}
 
-		public async Task Authenticate(Customer user)
+		[HttpGet]
+		public IActionResult Register()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Register(RegisterModel userToRegister)
+		{
+			if (ModelState.IsValid)
+			{
+				Customer user = await _context.Customers.FirstOrDefaultAsync(u => u.Login == userToRegister.Login);
+
+				if (user is null)
+				{
+					Customer newUser = new Customer() 
+					{ 
+						Login = userToRegister.Login, 
+						Password = userToRegister.Password, 
+						FirstName = userToRegister.FirstName, 
+						SecondName = userToRegister.SecondName 
+					};
+
+					_context.Customers.Add(newUser);
+
+					await _context.SaveChangesAsync();
+
+					await Authenticate(newUser); // аутентификация
+
+					return RedirectToAction("Index", "Home");
+				}
+				else
+				{
+					ModelState.AddModelError("", "Пользователь уже существует");
+				}
+			}
+
+			return View(userToRegister);
+		}
+
+		private async Task Authenticate(Customer user)
 		{
 			var claims = new List<Claim>
 				{

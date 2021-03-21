@@ -1,16 +1,16 @@
-﻿@model VeniceDemo.App.ViewModels.LoginModel
+﻿@model VeniceDemo.App.ViewModels.RegisterModel
 
 @{
-    ViewData["Title"] = "Вход";
+    ViewData["Title"] = "Регистрация";
 }
 
-<h1 class="display-4">Вход</h1>
+<h1 class="display-4">Регистрация</h1>
 
-<a asp-action="Register" asp-controller="Account">Регистрация</a>
-
+<h4>Клиент</h4>
+<hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Login" asp-controller="Account" asp-anti-forgery="true">
+        <form asp-action="Register" asp-controller="Account">
             <div class="validation" asp-validation-summary="ModelOnly"></div>
             <div>
                 <div class="form-group">
@@ -24,13 +24,22 @@
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Войти" class="btn btn-outline-dark" />
+                    <label asp-for="FirstName" class="control-label">Имя</label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SecondName" class="control-label">Фамилия</label>
+                    <input asp-for="SecondName" class="form-control" />
+                    <span asp-validation-for="SecondName" class="text-danger"></span>
+                </div>
+                <div>
+                    <input type="submit" value="Регистрация" />
                 </div>
             </div>
         </form>
     </div>
 </div>
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
