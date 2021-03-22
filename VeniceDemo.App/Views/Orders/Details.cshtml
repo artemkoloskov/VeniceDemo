@@ -1,36 +1,69 @@
 ﻿@model VeniceDemo.App.Models.Order
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Заказ №" + Model.Id;
 }
 
-<h1>Details</h1>
+<h1 class="display-6">Детали заказа</h1>
 
 <div>
-    <h4>Order</h4>
+    <h4>Заказ №@Model.Id</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateCreated)
+        <dt class="col-sm-2">
+            Дата создания
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DateCreated)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TotalCost)
+        <dt class="col-sm-2">
+            Общая стоимость
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.TotalCost)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer)
+        <dt class="col-sm-2">
+            Количество пицц
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Customer.Login)
+        <dd class="col-sm-10">
+            @Model.OrderPizzas.Count шт.
         </dd>
     </dl>
 </div>
+<div class="wrapper">
+    @foreach (OrderPizza pizza in Model.OrderPizzas)
+    {
+    <div class="tile">
+        <dl class="row">
+            <dt class="col-sm-5">
+                <img src="@pizza.Pizza.ImageUri" class="detailImage" height="300" />
+            </dt>
+            <dd class="col-sm-5">
+               
+            </dd>
+            <dt class="col-sm-5">
+                Название
+            </dt>
+            <dd class="col-sm-5">
+                @pizza.Pizza.Name
+            </dd>
+            <dt class="col-sm-5">
+                Стоимость
+            </dt>
+            <dd class="col-sm-5">
+                @pizza.Pizza.Price руб.
+            </dd>
+            <dt class="col-sm-5">
+                Вес
+            </dt>
+            <dd class="col-sm-5">
+                @pizza.Pizza.Weight г
+            </dd>
+        </dl>
+    </div>
+
+    }
+</div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Назад, в личный кабинет</a>
 </div>

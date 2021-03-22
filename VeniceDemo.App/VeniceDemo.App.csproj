@@ -20,7 +20,26 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Content\" />
     <Folder Include="DB\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\images\pizza1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\images\pizza2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\images\pizza3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\images\pizza4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

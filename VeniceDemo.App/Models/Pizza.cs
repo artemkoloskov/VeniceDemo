@@ -18,5 +18,7 @@ namespace VeniceDemo.App.Models
 		public double Weight { get; set; }
 
 		public virtual ICollection<OrderPizza> OrderPizzas { get; set; }
+
+		public virtual string ImageUri => $"/images/pizza{Id}.png";
 	}
 }

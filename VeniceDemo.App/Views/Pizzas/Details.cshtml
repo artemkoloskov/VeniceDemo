@@ -1,0 +1,37 @@
+﻿@model VeniceDemo.App.Models.Pizza
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1 class="display-6">@Model.Name</h1>
+
+<div>
+    <hr />
+
+    <img src="@Model.ImageUri" class="detailImage" height="400" />
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            Название
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Стоимость
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price) руб.
+        </dd>
+        <dt class="col-sm-2">
+            Вес
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Weight) г
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Назад, к меню</a>
+</div>

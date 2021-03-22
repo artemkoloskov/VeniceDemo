@@ -1,0 +1,41 @@
+﻿@model IEnumerable<VeniceDemo.App.Models.Pizza>
+
+@{
+    ViewData["Title"] = "Меню";
+}
+
+<h1 class="display-6">МЕНЮ</h1>
+
+<div class="wrapper">
+    @foreach (Pizza pizza in Model)
+    {
+        <div class="tile">
+            <dl class="row">
+                <dt class="col-sm-5">
+                    @pizza.Name
+                </dt>
+                <dd class="col-sm-5">
+                    
+                </dd>
+                <dt class="col-sm-5">
+                    <img src="@pizza.ImageUri" class="detailImage" height="300" />
+                </dt>
+                <dd class="col-sm-5">
+
+                </dd>
+                <dt class="col-sm-5">
+                    Стоимость
+                </dt>
+                <dd class="col-sm-5">
+                    @pizza.Price руб.
+                </dd>
+                <dt class="col-sm-5">
+                    Вес
+                </dt>
+                <dd class="col-sm-5">
+                    @pizza.Weight г
+                </dd>
+            </dl>
+        </div>
+    }
+</div>
