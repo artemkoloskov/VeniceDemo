@@ -35,6 +35,10 @@ namespace VeniceDemo.App
 
 			services.AddDatabaseDeveloperPageExceptionFilter();
 
+			services.AddDistributedMemoryCache();
+
+			services.AddSession();
+
 			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 				.AddCookie(options =>
 				{
@@ -65,6 +69,8 @@ namespace VeniceDemo.App
 
 			app.UseAuthentication();
 			app.UseAuthorization();
+
+			app.UseSession();
 
 			app.UseEndpoints(endpoints =>
 			{

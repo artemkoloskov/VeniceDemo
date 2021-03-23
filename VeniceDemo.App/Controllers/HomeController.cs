@@ -28,7 +28,7 @@ namespace VeniceDemo.App.Controllers
 		{
 			List<Customer> customers = _context.Customers.ToList();
 
-			Customer loggedInCustomer = customers.FirstOrDefault(c => 
+			Customer loggedInCustomer = customers.FirstOrDefault(c =>
 				c.Id.ToString() == User.Claims.Where(c => c.Type == "Id").FirstOrDefault().Value);
 
 			ViewBag.UserName = loggedInCustomer.FullName;

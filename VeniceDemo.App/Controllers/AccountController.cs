@@ -63,12 +63,12 @@ namespace VeniceDemo.App.Controllers
 
 				if (user is null)
 				{
-					Customer newUser = new Customer() 
-					{ 
-						Login = userToRegister.Login, 
-						Password = userToRegister.Password, 
-						FirstName = userToRegister.FirstName, 
-						SecondName = userToRegister.SecondName 
+					Customer newUser = new()
+					{
+						Login = userToRegister.Login,
+						Password = userToRegister.Password,
+						FirstName = userToRegister.FirstName,
+						SecondName = userToRegister.SecondName
 					};
 
 					_context.Customers.Add(newUser);
@@ -90,8 +90,8 @@ namespace VeniceDemo.App.Controllers
 
 		private async Task Authenticate(Customer user)
 		{
-			List<Claim> claims = new List<Claim>
-				{
+			List<Claim> claims = new()
+			{
 					new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
 					new Claim("Id", user.Id.ToString()),
 					new Claim("FullName", user.FullName)

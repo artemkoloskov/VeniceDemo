@@ -1,0 +1,13 @@
+﻿@model double
+
+@{
+    ViewData["Title"] = "Корзина";
+}
+
+<h1 class="display-6">Корзина</h1>
+<h1 class="display-10" style="text-align: center;">Задолженность</h1>
+<br />
+<br />
+<p style="text-align: center;">К сожалению, у вас образовалась задолженность в размере @Model руб.</p>
+<p style="text-align: center;">Просим оплатить задолженость, чтобы снова заказть нашу пиццу!</p>
+<a asp-controller="Payments" asp-action="Create" asp-route-amount="@Model">Внести платеж</a>

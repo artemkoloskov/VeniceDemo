@@ -10,37 +10,37 @@ using VeniceDemo.App.Models;
 
 namespace VeniceDemo.App.Controllers
 {
-    public class PizzasController : Controller
-    {
-        private readonly VeniceDBContext _context;
+	public class PizzasController : Controller
+	{
+		private readonly VeniceDBContext _context;
 
-        public PizzasController(VeniceDBContext context)
-        {
-            _context = context;
-        }
+		public PizzasController(VeniceDBContext context)
+		{
+			_context = context;
+		}
 
-        // GET: Pizzas
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Pizzas.ToListAsync());
-        }
+		// GET: Pizzas
+		public async Task<IActionResult> Index()
+		{
+			return View(await _context.Pizzas.ToListAsync());
+		}
 
-        // GET: Pizzas/Details/5
-        public async Task<IActionResult> Details(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+		// GET: Pizzas/Details/5
+		public async Task<IActionResult> Details(long? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
 
-            var pizza = await _context.Pizzas
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (pizza == null)
-            {
-                return NotFound();
-            }
+			var pizza = await _context.Pizzas
+				.FirstOrDefaultAsync(m => m.Id == id);
+			if (pizza == null)
+			{
+				return NotFound();
+			}
 
-            return View(pizza);
-        }
-    }
+			return View(pizza);
+		}
+	}
 }

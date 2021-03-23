@@ -1,0 +1,73 @@
+﻿@model IEnumerable<VeniceDemo.App.Models.Pizza>
+
+@{
+    ViewData["Title"] = "Корзина";
+}
+
+<h1 class="display-6">Корзина</h1>
+@if(Model is null || Model.Count() == 0)
+{
+    <h1 class="display-10" style="text-align: center;">Корзина пуста</h1>
+}
+else
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+
+            </th>
+            <th>
+                Наименование
+            </th>
+            <th>
+                Вес
+            </th>
+            <th>
+                Стоимость
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var pizza in Model) {
+        <tr>
+            <td>
+                <img src="@pizza.ImageUri" class="detailImage" height="75" />
+            </td>
+            <td>
+                @pizza.Name
+            </td>
+            <td>
+                @pizza.Weight г
+            </td>
+            <td>
+                @pizza.Price руб.
+            </td>
+            <td align="center">
+                <a asp-controller="Cart" asp-action="DeleteItem" asp-route-id="@pizza.Id">Удалить</a>
+            </td>
+        </tr>
+}
+    <tr>
+        <td>
+            Всего
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+            @ViewBag.TotalOrderCost руб.
+        </td>
+        <td>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a asp-controller="Cart" asp-action="Checkout">Оформить заказ</a>
+}
+

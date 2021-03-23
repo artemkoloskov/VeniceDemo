@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VeniceDemo.App.Data;
+using VeniceDemo.App.Helpers;
 using VeniceDemo.App.Models;
 
 namespace VeniceDemo.App.Controllers
@@ -28,85 +29,21 @@ namespace VeniceDemo.App.Controllers
 		{
 			_customerId = User.Claims.Where(c => c.Type == "Id").FirstOrDefault().Value;
 
-			var orders = await GetOrdersData();
+			var orders = await FinanceHelper.GetOrdersData(_context, _customerId);
 
-			var payments = await GetPaymentsData();
+			ViewBag.TotalOrdersCost = FinanceHelper.GetTotalOrdersCost(orders);
+
+			var payments = await FinanceHelper.GetPaymentsData(_context, _customerId);
+
+			ViewBag.TotalAmountPaid = FinanceHelper.GetTotalAmountPaid(payments);
 
 			ViewBag.CustomerPayments = payments;
 
-			ViewBag.WeeklyData = GetWeeklyData(orders, payments);
+			ViewBag.WeeklyData = FinanceHelper.GetWeeklyData(orders, payments);
 
-			return View(orders);
-		}
+            ViewBag.CurrentWeekKey = FinanceHelper.GetWeekKey(DateTime.Now);
 
-		private async Task<List<Payment>> GetPaymentsData()
-		{
-			await _context.Payments.LoadAsync();
-
-			var customerPayments = _context.Payments
-				.Where(p => p.CustomerId + "" == _customerId);
-
-			var payments = await customerPayments.ToListAsync();
-
-			ViewBag.TotalAmountPaid = Payment.GetTotalAmountPaid(payments);
-
-			return payments;
-		}
-
-		private async Task<List<Order>> GetOrdersData()
-		{
-			var customerOrders = _context.Orders
-				.Where(o => o.CustomerId + "" == _customerId)
-				.Include(o => o.OrderPizzas)
-					.ThenInclude(op => op.Pizza);
-
-			var orders = await customerOrders.ToListAsync();
-
-			ViewBag.TotalOrdersCost = Order.GetTotalOrdersCost(orders);
-
-			return orders;
-		}
-
-		private Dictionary<string, (double ordered, double paid, double delta)> GetWeeklyData(List<Order> orders, List<Payment> payments)
-		{
-			Dictionary<string, (double ordered, double paid, double delta)> weeklyData = new();
-
-			var weeklyOrders = Order.GetWeeklyOrdersData(orders);
-
-			var weeklyPayments = Payment.GetWeeklyPaymentsData(payments);
-
-			List<string> allWeekKeys = GetAllWeekKeys(new List<string>(weeklyOrders.Keys), new List<string>(weeklyPayments.Keys));
-
-			foreach (string weekKey in allWeekKeys)
-			{
-				double ordered = weeklyOrders.ContainsKey(weekKey) ? weeklyOrders[weekKey] : 0;
-
-				double paid = weeklyPayments.ContainsKey(weekKey) ? weeklyPayments[weekKey] : 0;
-
-				double delta = ordered - paid;
-
-				weeklyData.Add(weekKey, (ordered, paid, delta));
-			}
-
-			return weeklyData;
-		}
-
-		private static List<string> GetAllWeekKeys(List<string> list1, List<string> list2)
-		{
-			List<string> allWeeklyKeys = new();
-
-			foreach (List<string> list in new[] { list1, list2 })
-			{
-				foreach (string key in list)
-				{
-					if (!allWeeklyKeys.Contains(key))
-					{
-						allWeeklyKeys.Add(key);
-					}
-				}
-			}
-
-			return allWeeklyKeys;
+            return View(orders);
 		}
 
 		// GET: Orders/Details/5
@@ -131,33 +68,56 @@ namespace VeniceDemo.App.Controllers
 			return View(order);
 		}
 
-		// GET: Orders/Create
-		public IActionResult Create()
-		{
-			ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Login");
+        public async Task<IActionResult> Edit(long? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-			return View();
-		}
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            return View(order);
+        }
 
-		// POST: Orders/Create
-		// To protect from overposting attacks, enable the specific properties you want to bind to.
-		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("Id,DateCreated,CustomerId,TotalCost")] Order order)
-		{
-			if (ModelState.IsValid)
-			{
-				_context.Add(order);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(long id, [Bind("Id,CustomerId,DateCreated")] Order order)
+        {
+            if (id != order.Id)
+            {
+                return NotFound();
+            }
 
-				await _context.SaveChangesAsync();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(order);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!OrderExists(order.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(order);
+        }
 
-				return RedirectToAction(nameof(Index));
-			}
-
-			ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Login", order.CustomerId);
-
-			return View(order);
-		}
-	}
+        private bool OrderExists(long id)
+        {
+            return _context.Orders.Any(e => e.Id == id);
+        }
+    }
 }

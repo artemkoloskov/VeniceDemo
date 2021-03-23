@@ -1,0 +1,12 @@
+﻿@model long
+
+@{
+    ViewData["Title"] = "Заказ принят";
+}
+
+<h1 class="display-6">Корзина</h1>
+<h1 class="display-10" style="text-align: center;">Заказ №@Model принят!</h1>
+<br />
+<br />
+<p style="text-align: center;">Спасибо за то, что выбираете нас!</p>
+<a style="text-align: center;" asp-controller="Pizzas" asp-action="Index">В меню</a>
