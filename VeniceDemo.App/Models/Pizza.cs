@@ -7,6 +7,9 @@ namespace VeniceDemo.App.Models
 {
 	public partial class Pizza
 	{
+		/// <summary>
+		/// Пицца
+		/// </summary>
 		public Pizza()
 		{
 			OrderPizzas = new HashSet<OrderPizza>();
@@ -19,6 +22,9 @@ namespace VeniceDemo.App.Models
 
 		public virtual ICollection<OrderPizza> OrderPizzas { get; set; }
 
+		/// <summary>
+		/// Адрес картинки пиццы
+		/// </summary>
 		public virtual string ImageUri => $"/images/pizza{Id}.png";
 	}
 }

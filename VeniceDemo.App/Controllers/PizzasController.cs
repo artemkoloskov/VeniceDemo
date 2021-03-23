@@ -10,6 +10,9 @@ using VeniceDemo.App.Models;
 
 namespace VeniceDemo.App.Controllers
 {
+	/// <summary>
+	/// Контроллер меню. Позволяет посмотреть все доступные пиццы и детали по ним
+	/// </summary>
 	public class PizzasController : Controller
 	{
 		private readonly VeniceDBContext _context;

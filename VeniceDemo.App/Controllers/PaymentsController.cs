@@ -10,6 +10,9 @@ using VeniceDemo.App.Models;
 
 namespace VeniceDemo.App.Controllers
 {
+    /// <summary>
+    /// Контроллер платежей
+    /// </summary>
     public class PaymentsController : Controller
     {
         private readonly VeniceDBContext _context;
@@ -19,7 +22,11 @@ namespace VeniceDemo.App.Controllers
             _context = context;
         }
 
-        // GET: Payments/Details/5
+        /// <summary>
+        /// Страница с деталями платежа
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -38,7 +45,11 @@ namespace VeniceDemo.App.Controllers
             return View(payment);
         }
 
-        // GET: Payments/Create
+        /// <summary>
+        /// Страница создания новго платежа
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <returns></returns>
         public IActionResult Create(double amount = 0)
         {
             ViewBag.Debt = amount;
@@ -46,9 +57,11 @@ namespace VeniceDemo.App.Controllers
             return View();
         }
 
-        // POST: Payments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Экшн создающий новый платеж на основе данных формы заполненной на странице создания платежа
+        /// </summary>
+        /// <param name="payment"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,DateCreated,Amount,CustomerId")] Payment payment)

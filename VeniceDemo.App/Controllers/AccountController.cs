@@ -16,6 +16,9 @@ using VeniceDemo.App.ViewModels;
 
 namespace VeniceDemo.App.Controllers
 {
+	/// <summary>
+	/// Контроллер аккаунтов. Управляет созданием профиля клиента, логином, и выходом из профиля
+	/// </summary>
 	public class AccountController : Controller
 	{
 		private readonly VeniceDBContext _context;
@@ -88,6 +91,11 @@ namespace VeniceDemo.App.Controllers
 			return View(userToRegister);
 		}
 
+		/// <summary>
+		/// Аутентификация через куки
+		/// </summary>
+		/// <param name="user"></param>
+		/// <returns></returns>
 		private async Task Authenticate(Customer user)
 		{
 			List<Claim> claims = new()

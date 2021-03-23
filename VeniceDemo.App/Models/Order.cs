@@ -6,6 +6,9 @@ using System.Globalization;
 
 namespace VeniceDemo.App.Models
 {
+	/// <summary>
+	/// Заказ
+	/// </summary>
 	public partial class Order
 	{
 		public Order()
@@ -22,6 +25,9 @@ namespace VeniceDemo.App.Models
 
 		private string dateCreated;
 
+		/// <summary>
+		/// Подсчитывает общую сумму заказа, суммирую стоимость всех пицц в заказе
+		/// </summary>
 		public virtual double TotalCost
 		{
 			get

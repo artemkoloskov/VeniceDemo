@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace VeniceDemo.App.Models
 {
+	/// <summary>
+	/// связка заказа с пиццей, для реализации многие ко многим
+	/// </summary>
 	public partial class OrderPizza
 	{
 		public long Id { get; set; }

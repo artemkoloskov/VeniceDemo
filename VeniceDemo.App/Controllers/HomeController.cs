@@ -23,6 +23,10 @@ namespace VeniceDemo.App.Controllers
 			_context = context;
 		}
 
+		/// <summary>
+		/// Главная страница, не доступна без авторизации или регистрации. Приветствует клтиента
+		/// </summary>
+		/// <returns></returns>
 		[Authorize]
 		public IActionResult Index()
 		{

@@ -6,6 +6,9 @@ using System.Globalization;
 
 namespace VeniceDemo.App.Models
 {
+	/// <summary>
+	/// Платеж
+	/// </summary>
 	public partial class Payment
 	{
 		public long Id { get; set; }

@@ -9,6 +9,9 @@ using VeniceDemo.App.Models;
 
 namespace VeniceDemo.App.Data
 {
+	/// <summary>
+	/// Контекст базы данных SQLite
+	/// </summary>
 	public partial class VeniceDBContext : DbContext
 	{
 		public IConfiguration Configuration { get; }

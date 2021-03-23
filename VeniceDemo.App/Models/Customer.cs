@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace VeniceDemo.App.Models
 {
+	/// <summary>
+	/// Клиент и одновременно аккаунт клиента
+	/// </summary>
 	public partial class Customer
 	{
 		public Customer()

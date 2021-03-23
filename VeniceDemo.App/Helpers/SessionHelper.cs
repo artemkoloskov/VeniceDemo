@@ -3,6 +3,9 @@ using System.Text.Json;
 
 namespace VeniceDemo.App.Helpers
 {
+	/// <summary>
+	/// Помщник по сериализации данных, для отправки в сессию.
+	/// </summary>
 	public static class SessionHelper
 	{
 		public static void SetObjectAsJson(this ISession session, string key, object value)
